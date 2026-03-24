@@ -57,6 +57,7 @@ git submodule update --init --recursive
 | `CLAUDE.md` | User preferences: environment, workflow rules, session management, build philosophy, frontend/code style, communication style |
 | `skills/start-session/` | Generic session start with quest routing (main/side) and conversation naming |
 | `skills/end-session/` | Generic session end with context file updates, branch cleanup, and summary |
+| `skills/rename-session/` | Programmatic session rename via `.jsonl` — called automatically by start/end-session |
 | `skills/agent-teams/` | Patterns for orchestrating sub-agent teams |
 | `skills/parallel-worktrees/` | Git worktree patterns for isolated parallel development |
 | `skills/write-review-split/` | Parallel write + review workflow for quality |

@@ -62,18 +62,22 @@ Worktree subagents and previous sessions can leave behind stale branches. Clean 
 
 Include the count of deleted branches in the session summary (e.g., "Cleaned up: 5 stale branches").
 
-### 5. Commit and Push
+### 5. Re-apply Session Title
+
+Re-append the session title to combat the 64KB eviction issue (see `rename-session` skill). Use the `rename-session` skill with the same title that was set at session start. This keeps the custom title near the end of the `.jsonl` file so it stays visible in the session list.
+
+### 6. Commit and Push
 
 - Stage all changed files (on whichever branch is current after step 4)
 - Write a clear commit message summarizing the session's work
 - Push to the current branch
 - If commit or push fails, report the error — don't silently skip it
 
-### 6. Suggest Fresh Start
+### 7. Suggest Fresh Start
 
 If the session was long or involved multiple large changes, explicitly recommend starting a fresh session next time rather than continuing this one. Mention if `/compact` would help if continuing is preferred.
 
-### 7. Print Session Summary
+### 8. Print Session Summary
 
 #### For Main Quest sessions:
 

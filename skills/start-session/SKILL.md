@@ -24,11 +24,13 @@ Begin a new working session. Quest type is determined by `$ARGUMENTS` (defaults 
 1. **Read context files** (skip any that don't exist yet):
    - `NEXT_SESSION.md` — continuity notes from the previous session
    - `TODO.md` — current task list and priorities
-2. **Name the session** (MUST be your very first output): derive a descriptive one-liner from NEXT_SESSION.md combining the project name and top priority. Example: "Golf Shot Tracker: Sprint 5 Practice Plan Generator". This line determines the conversation title — never open with a generic phrase like "Starting new session."
+2. **Name the session** (MUST be your very first output): derive a descriptive one-liner from NEXT_SESSION.md combining the project name and top priority. Example: "Golf Shot Tracker: Sprint 5 Practice Plan Generator". This line determines the conversation title in desktop/web — never open with a generic phrase like "Starting new session."
 3. **Identify the critical path**: summarize the top 1-3 priorities from these files.
 4. **State your plan**: tell the user what you'll focus on and in what order. For multi-file changes, outline the plan before executing (Plan Mode).
-5. **Identify parallelization opportunities**: if the plan has independent steps, note which ones can run concurrently via subagents or worktrees.
-6. **Side quest capture rule**: if at any point during this session you notice an unrelated idea, improvement, or tangent worth exploring later, append it to `SIDE_QUESTS.md` under a `## Backlog` heading with a one-liner description and date. Do NOT pursue it — stay on the main quest.
+5. **Get user confirmation**: ask the user to confirm or adjust the focus area before proceeding.
+6. **Rename the session**: once the user confirms their focus, programmatically rename the session using the `rename-session` skill. Derive the title from the confirmed focus: `<Project Name>: <Confirmed Focus Area>`. This ensures the session title reflects the actual work, not just the initial suggestion.
+7. **Identify parallelization opportunities**: if the plan has independent steps, note which ones can run concurrently via subagents or worktrees.
+8. **Side quest capture rule**: if at any point during this session you notice an unrelated idea, improvement, or tangent worth exploring later, append it to `SIDE_QUESTS.md` under a `## Backlog` heading with a one-liner description and date. Do NOT pursue it — stay on the main quest.
 
 Print a session banner (AFTER the descriptive opening line):
 
@@ -45,10 +47,11 @@ Print a session banner (AFTER the descriptive opening line):
 **You are on a Side Quest — exploratory work from the backlog.**
 
 1. **Read `SIDE_QUESTS.md`**. If it doesn't exist or is empty, tell the user there are no side quests queued and offer to start a main session instead.
-2. **Name the session** (MUST be your very first output): derive a descriptive one-liner combining the project name and the side quest topic. Example: "PDB Agents — Side Quest: Branch cleanup automation". This determines the conversation title.
+2. **Name the session** (MUST be your very first output): derive a descriptive one-liner combining the project name and the side quest topic. Example: "PDB Agents — Side Quest: Branch cleanup automation". This determines the conversation title in desktop/web.
 3. **Pick one contained item** — choose something self-contained that won't disrupt main quest code paths. Prefer items that are interesting, low-risk, and completable in a single session.
 4. **State what you picked and why.** Get user confirmation before starting.
-5. **Guardrail**: do NOT modify files that are on the critical path of the main quest unless the side quest specifically requires it and you get explicit user approval.
+5. **Rename the session**: once the user confirms the side quest choice, programmatically rename the session using the `rename-session` skill. Title format: `<Project Name> — Side Quest: <Chosen Item>`.
+6. **Guardrail**: do NOT modify files that are on the critical path of the main quest unless the side quest specifically requires it and you get explicit user approval.
 
 Print a session banner (AFTER the descriptive opening line):
 

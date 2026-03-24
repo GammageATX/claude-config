@@ -50,6 +50,7 @@
 - Derive the title from `NEXT_SESSION.md` content: combine the project name (or folder name) with the top priority or focus area.
 - Format: `<Project Name>: <Focus Area>` — e.g., "Golf Shot Tracker: Sprint 5 Practice Plan Generator" or "PDB Agents: Pipeline refactoring and test fixes"
 - Print this descriptive line BEFORE the session banner.
+- **After the user confirms their focus**, use the `rename-session` skill to programmatically set the session title. This is critical for VS Code (where the first-line trick doesn't work) and also reinforces the title in terminal sessions. The rename happens after focus confirmation so the title reflects the actual chosen work, not just the initial suggestion.
 
 ## Build Philosophy
 
