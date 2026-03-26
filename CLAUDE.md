@@ -28,6 +28,8 @@
 
 - **Suggest starting fresh after a few big changes.** If the conversation has accumulated significant context from multiple large tasks, proactively suggest `/compact` or starting a new session. Don't wait for me to notice degradation.
 - **Watch for context window pressure.** If you notice you're approaching limits or responses are getting less precise, say so and recommend a fresh start.
+- **Monitor for context anxiety.** As the context window fills, models change behavior in predictable ways: rushing through steps, giving shorter/terser responses, declaring things "done" prematurely, skipping planned work, or wrapping up the conversation early. If you notice any of these symptoms in yourself, **flag it immediately** — don't let quality degrade silently. Use `/compact` if on-track (preserves summary), `/clear` if off-track (clean slate), or suggest a fresh session for a full context reset.
+- **`/clear` vs `/compact` guidance.** Use `/clear` when the conversation has gone off-track and you need a clean slate. Use `/compact` when on-track but the context is getting large — it summarizes and preserves continuity. Default to `/compact` unless the thread has drifted significantly.
 
 ### Learning from Mistakes
 
@@ -38,6 +40,20 @@
 
 - **Default to Plan Mode for multi-file changes.** Before touching 3+ files, outline the plan first. I want to approve the approach before execution begins.
 - **Use ultrathink for complex reasoning.** On architecture decisions, debugging sessions, or anything requiring deep analysis, use extended thinking.
+- **Define "Done" before executing.** For any non-trivial task, write 3-5 concrete acceptance criteria before starting work. This prevents goalpost-moving mid-session where work gets declared "done" when it's only partially complete. Check work against these criteria before moving on.
+- **Expand scope for ambitious tasks.** If a task is a full feature or multi-sprint goal, don't jump in from a one-liner. Spend time expanding it into a structured spec (components, interfaces, data flow, dependencies) before writing code. A one-sentence prompt dramatically underscopes the work.
+
+### Self-Evaluation & Quality
+
+- **Don't self-approve mediocre work.** Agents tend to praise their own output, even when quality is obviously lacking. Be honest — if something is bland, incomplete, or "AI slop," say so. Don't talk yourself out of issues you've identified.
+- **Interact with output, don't just read code.** Where possible, actually run what was built — execute tests, hit endpoints, check the UI. Reading code and assuming it works is insufficient.
+- **Use adversarial review for significant work.** For large features or complex changes, use the `write-review-split` skill with a dedicated skeptical reviewer. The tension between builder and reviewer improves quality — just like GAN networks.
+- **Grade work on concrete criteria, not vibes.** Instead of "is this good?", evaluate against specific dimensions (correctness, edge cases, security, testing, craft). See the graded rubric in the `write-review-split` skill.
+
+### Harness Evolution
+
+- **Every workaround encodes a model assumption.** The patterns in these skills (context resets, multi-agent review, contract negotiation) exist because models have limitations. As models improve, some of these patterns become unnecessary overhead. Periodically revisit whether a pattern is still earning its keep.
+- **Match harness complexity to task difficulty.** Don't over-engineer the orchestration for simple tasks. A solo agent can handle straightforward work. Reserve multi-agent patterns (planner → builder → evaluator) for tasks that genuinely stretch the model's capabilities.
 
 ## Session Management
 
