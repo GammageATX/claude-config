@@ -13,7 +13,7 @@ Begin a new working session. Quest type is determined by `$ARGUMENTS` (defaults 
 
 1. **Read `CLAUDE.md`** (both user-level `~/.claude/CLAUDE.md` and project-level if present) to load preferences and workflow rules.
 2. **Check environment**: confirm what tools, MCP servers, and plugins are available. If something expected is missing, flag it.
-3. **Assess context health**: if resuming a long-running conversation, check if a `/compact` or fresh session would be beneficial. If so, recommend it before proceeding.
+3. **Assess context health**: if resuming a long-running conversation, check if a `/compact` or fresh session would be beneficial. Use `/clear` if the conversation has gone off-track (clean slate). Use `/compact` if on-track but context is getting large (preserves summary). If so, recommend the appropriate one before proceeding.
 
 ## Quest Routing
 
@@ -29,8 +29,13 @@ Begin a new working session. Quest type is determined by `$ARGUMENTS` (defaults 
 4. **State your plan**: tell the user what you'll focus on and in what order. For multi-file changes, outline the plan before executing (Plan Mode).
 5. **Get user confirmation**: ask the user to confirm or adjust the focus area before proceeding.
 6. **Rename the session**: once the user confirms their focus, programmatically rename the session using the `rename-session` skill. Derive the title from the confirmed focus: `<Project Name>: <Confirmed Focus Area>`. This ensures the session title reflects the actual work, not just the initial suggestion.
-7. **Identify parallelization opportunities**: if the plan has independent steps, note which ones can run concurrently via subagents or worktrees.
-8. **Side quest capture rule**: if at any point during this session you notice an unrelated idea, improvement, or tangent worth exploring later, append it to `SIDE_QUESTS.md` under a `## Backlog` heading with a one-liner description and date. Do NOT pursue it — stay on the main quest.
+7. **Define "Done" (contract negotiation)**: before any work begins, explicitly state what "done" looks like for this session. Write 3-5 concrete acceptance criteria — not vague goals. This prevents goalpost-moving mid-session (where the agent declares things done when they're not). If the session has a `SCRATCHPAD.md`, write the criteria there. Otherwise, state them inline and include them in the TodoWrite list. Example:
+   - "User can upload an avatar and see it on their profile page"
+   - "All new endpoints have passing integration tests"
+   - "The dashboard loads in under 2 seconds with 100 records"
+8. **Expand scope for ambitious tasks**: if the confirmed focus is a full feature, multi-sprint goal, or anything that would take more than a single session — don't just jump in. Expand the one-liner into a structured spec first (key components, interfaces, data flow, dependencies). This mirrors the planner agent pattern: a one-sentence prompt dramatically underscopes the work. Spend 5-10 minutes on spec expansion to avoid hours of rework.
+9. **Identify parallelization opportunities**: if the plan has independent steps, note which ones can run concurrently via subagents or worktrees.
+10. **Side quest capture rule**: if at any point during this session you notice an unrelated idea, improvement, or tangent worth exploring later, append it to `SIDE_QUESTS.md` under a `## Backlog` heading with a one-liner description and date. Do NOT pursue it — stay on the main quest.
 
 Print a session banner (AFTER the descriptive opening line):
 
@@ -71,6 +76,8 @@ Once the session is underway, remember these rules from CLAUDE.md:
 - **Plan before executing**: for 3+ file changes, outline the plan first and get approval.
 - **Context hygiene**: if the session gets large, suggest compacting or splitting.
 - **Learn from corrections**: if the user corrects you, offer to update CLAUDE.md.
+- **Monitor for context anxiety**: watch for these symptoms in yourself — rushing through steps, skipping planned work, giving shorter/terser responses, declaring things "done" when they're only partially complete, or wrapping up prematurely. If you notice any of these, flag it to the user immediately and suggest a context reset or compaction. Don't let the session quality degrade silently.
+- **Check work against Definition of Done**: before moving on from any major task, explicitly check it against the acceptance criteria defined at session start. Don't self-approve — be honest about what's actually complete vs. what's "close enough."
 
 ## Notes
 
