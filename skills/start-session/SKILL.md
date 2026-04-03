@@ -1,23 +1,49 @@
 ---
 name: start-session
 description: Start a new session with quest type routing — main quest (critical path) or side quest (backlog exploration)
-argument-hint: "[main|side]"
+argument-hint: "[main|side] [TICKET-123]"
 user-invocable: true
 ---
 
 # Start Session
 
-Begin a new working session. Quest type is determined by `$ARGUMENTS` (defaults to `main` if omitted).
+Begin a new working session. Quest type and optional ticket reference are determined by `$ARGUMENTS`.
+
+## Argument Parsing
+
+Parse `$ARGUMENTS` to extract:
+- **Quest type**: `main` or `side` (defaults to `main` if not specified)
+- **Ticket reference**: any token matching the pattern `[A-Z]+-\d+` (e.g., `GAM-5`, `PDB-12`). Optional.
+
+Examples:
+- `/start-session` → quest=main, ticket=none
+- `/start-session GAM-5` → quest=main, ticket=GAM-5
+- `/start-session side` → quest=side, ticket=none
+- `/start-session main GAM-5` → quest=main, ticket=GAM-5
+- `/start-session side PDB-3` → quest=side, ticket=PDB-3
+
+Any other tokens in `$ARGUMENTS` are ignored.
+
+When a ticket is provided:
+- **Include it in the session title**: e.g., "Golf Shot Tracker: My Bag Setup (GAM-5)"
+- **Display it in the banner**: add a `Ticket: GAM-5` line
+- **Write it into `NEXT_SESSION.md`** at end-of-session so the next session knows what was worked on
 
 ## Pre-Flight (All Quest Types)
 
 1. **Read `CLAUDE.md`** (both user-level `~/.claude/CLAUDE.md` and project-level if present) to load preferences and workflow rules.
 2. **Check environment**: confirm what tools, MCP servers, and plugins are available. If something expected is missing, flag it.
 3. **Assess context health**: if resuming a long-running conversation, check if a `/compact` or fresh session would be beneficial. Use `/clear` if the conversation has gone off-track (clean slate). Use `/compact` if on-track but context is getting large (preserves summary). If so, recommend the appropriate one before proceeding.
+4. **Sync shared skills**: the `claude-config` repo (`~/claude-config/skills/`) is the **source of truth** for generic skills. The runtime copy (`~/.claude/skills/`) should always match it.
+   - If the `claude-config` repo exists, compare each skill in `~/claude-config/skills/` against `~/.claude/skills/` (ignoring line endings).
+   - If any differ, **copy from `claude-config` → `~/.claude/skills/`** (one-way sync, repo wins).
+   - Report which skills were synced.
+   - **Never touch project-level skill overrides** (skills in `.claude/skills/` within a project repo). Those are intentional customizations — edits to those happen in that project, not here.
+   - If the generic skill has gained new features since a project override was last updated, mention it as an FYI (e.g., "Note: the generic end-session skill now includes Docker auto-rebuild — your PDB override doesn't have this yet"). Don't auto-modify project overrides.
 
 ## Quest Routing
 
-### If `$ARGUMENTS` is `main` (or empty/omitted):
+### If quest type is `main` (or empty/omitted):
 
 **You are on the Main Quest — critical path work.**
 
@@ -42,12 +68,13 @@ Print a session banner (AFTER the descriptive opening line):
 ```
 ======================================
   SESSION START - MAIN QUEST
+  Ticket: <ticket ref or "none">
   Priorities: <top 1-3 items>
   Parallel opportunities: <if any>
 ======================================
 ```
 
-### If `$ARGUMENTS` is `side`:
+### If quest type is `side`:
 
 **You are on a Side Quest — exploratory work from the backlog.**
 
@@ -63,6 +90,7 @@ Print a session banner (AFTER the descriptive opening line):
 ```
 ======================================
   SESSION START - SIDE QUEST
+  Ticket: <ticket ref or "none">
   Exploring: <chosen item>
 ======================================
 ```
