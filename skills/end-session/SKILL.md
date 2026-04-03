@@ -45,7 +45,7 @@ Categorize each deliverable into one of these statuses:
 - **Partial**: started but not complete — be specific about what's missing
 - **Skipped**: planned but didn't get to it — note why
 
-Use these categories in the session summary (Step 8) instead of a flat "Accomplished" list.
+Use these categories in the session summary (Step 10) instead of a flat "Accomplished" list.
 
 ### 4. Update Context Files
 
@@ -85,22 +85,46 @@ Worktree subagents and previous sessions can leave behind stale branches. Clean 
 
 Include the count of deleted branches in the session summary (e.g., "Cleaned up: 5 stale branches").
 
-### 6. Re-apply Session Title
+### 6. Docker Container Rebuild (if applicable)
+
+If the project uses Docker, auto-rebuild containers when session changes affect them.
+
+**Step 6a: Detect Docker infrastructure**
+- Check if `docker-compose.yml`, `docker-compose.yaml`, `compose.yml`, `compose.yaml`, or any `Dockerfile` exists in the project root or common subdirectories.
+- If none found, skip this step entirely (no output needed).
+
+**Step 6b: Check if changes affect containers**
+- Compare files modified during this session (from `git diff` and `git status`) against container-affecting files:
+  - `Dockerfile*`, `docker-compose*.yml`, `compose*.yml`
+  - `requirements.txt`, `pyproject.toml`, `poetry.lock`, `Pipfile`, `Pipfile.lock`
+  - `package.json`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
+  - `.env`, `.env.*` (but not `.env.example`)
+  - Any file explicitly referenced in a `COPY` or `ADD` directive in a Dockerfile
+  - Config files mounted as volumes in compose (check the `volumes:` section)
+- If no container-affecting files were changed, skip the rebuild.
+
+**Step 6c: Rebuild and restart**
+- Run `docker compose down` to stop running containers for this project.
+- Run `docker compose up -d --build` to rebuild images and restart containers.
+- If the rebuild fails, report the error in the session summary but don't block the rest of the end-session flow.
+- Include rebuild status in the session summary (e.g., "Docker: rebuilt 2 services" or "Docker: rebuild failed — see error above").
+
+### 7. Re-apply Session Title
 
 Re-append the session title to combat the 64KB eviction issue (see `rename-session` skill). Use the `rename-session` skill with the same title that was set at session start. This keeps the custom title near the end of the `.jsonl` file so it stays visible in the session list.
 
-### 7. Commit and Push
+### 8. Commit and Push
 
 - Stage all changed files (on whichever branch is current after step 4)
 - Write a clear commit message summarizing the session's work
 - Push to the current branch
 - If commit or push fails, report the error — don't silently skip it
 
-### 8. Suggest Fresh Start
+### 9. Suggest Fresh Start
 
 If the session was long or involved multiple large changes, explicitly recommend starting a fresh session next time rather than continuing this one. Mention if `/compact` would help if continuing is preferred.
 
-### 9. Print Session Summary
+### 10. Print Session Summary
 
 #### For Main Quest sessions:
 
@@ -121,6 +145,7 @@ If the session was long or involved multiple large changes, explicitly recommend
     * <item — why>
 
   Definition of Done met: <Y/N/Partial>
+  Docker: <rebuilt N services | rebuild failed | no changes | N/A>
   CLAUDE.md updates proposed: <Y/N>
   Side quests captured: <N>
     * <brief descriptions if any>
@@ -148,6 +173,7 @@ If the session was long or involved multiple large changes, explicitly recommend
     * <outcome — what's missing>
 
   Status: <completed | partial - needs another session>
+  Docker: <rebuilt N services | rebuild failed | no changes | N/A>
   Main quest impact: <none | describe if any>
   CLAUDE.md updates proposed: <Y/N>
 ======================================
