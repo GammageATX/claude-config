@@ -15,6 +15,7 @@
 
 ### Parallel Execution
 
+- **Always default to agent parallelism.** When facing 2+ independent tasks, **always** dispatch them as parallel subagents rather than doing them sequentially inline. This is the default, not a suggestion. The only exception is when tasks are tightly coupled and share state that can't be split.
 - **Background non-sequential steps.** When steps are independent (e.g., running tests while drafting docs, linting while committing), use `run_in_background` or launch parallel subagents. Don't serialize work that can be parallelized.
 - **Use worktrees for major improvements.** When making large or risky changes, prefer `--worktree` isolation so the main branch stays clean. See the `parallel-worktrees` skill for the full pattern.
 - **Split write and review when appropriate.** On significant code changes, consider spawning a parallel review subagent to catch issues while the main agent continues working. See the `write-review-split` skill.
@@ -23,6 +24,10 @@
 
 - **Establish sub-agent teams when appropriate.** For complex multi-part tasks, spin up focused subagents rather than doing everything sequentially in one context. Each subagent should have a clear, scoped responsibility.
 - **Subagents should report back concisely** — a summary of what was done, what succeeded, and what needs attention.
+
+### Permissions
+
+- **Use bypass/auto-approve permissions.** Don't gate progress behind permission prompts. I trust the tools — use `--dangerously-skip-permissions` or equivalent bypass mode so sessions flow without interruption. The allowlist in settings.json is a fallback, not the primary mode.
 
 ### Context Hygiene
 
