@@ -11,12 +11,14 @@ Wrap up the current working session. Auto-detect the quest type by reviewing the
 
 ## Steps
 
-### 1. Detect Quest Type
+### 1. Detect Quest Type and Ticket
 
 Look at the beginning of this conversation for:
 - A `SESSION START - MAIN QUEST` banner -> this was a **main** session
 - A `SESSION START - SIDE QUEST` banner -> this was a **side** session
 - If neither is found, assume **main**.
+
+Also look for a `Ticket: <ref>` line in the session banner (e.g., `Ticket: GAM-5`). If found, carry this ticket reference through the end-of-session outputs. If no ticket was set, treat as "none".
 
 ### 2. Context Hygiene Check
 
@@ -51,6 +53,7 @@ Use these categories in the session summary (Step 10) instead of a flat "Accompl
 
 #### `NEXT_SESSION.md`
 Rewrite this file with fresh continuity notes for whoever picks up next:
+- **Ticket worked on** (if a ticket was set this session, include it prominently at the top — e.g., `Ticket: GAM-5`)
 - What was accomplished this session (use the graded statuses from Step 3c)
 - What's in progress or partially done
 - Any blockers, open questions, or decisions needed
@@ -131,6 +134,7 @@ If the session was long or involved multiple large changes, explicitly recommend
 ```
 ======================================
   SESSION END - MAIN QUEST
+  Ticket: <ticket ref or "none">
   ------------------------------------
   Done & Verified:
     * <item — tested and meets acceptance criteria>
@@ -160,6 +164,7 @@ If the session was long or involved multiple large changes, explicitly recommend
 ```
 ======================================
   SESSION END - SIDE QUEST
+  Ticket: <ticket ref or "none">
   ------------------------------------
   Explored: <item name>
 
