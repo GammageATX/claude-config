@@ -35,12 +35,20 @@ Before updating context files or declaring anything "accomplished," run a critic
 - For each criterion, honestly assess: **met**, **partially met**, or **not met**.
 - Do NOT talk yourself out of issues you identify. If something is mediocre, say so.
 
-**Step 3b: Interact with the output**
+**Step 3b: Project Health Check**
+- Check if the project's `CLAUDE.md` documents a build command, test command, or lint command.
+- If a **build command** exists, run it. If it fails, the session has introduced a regression — flag it as a blocker.
+- If a **test command** exists, run it. Report failures — don't commit code that breaks existing tests.
+- If a **lint command** exists, run it. Note warnings but don't block on them.
+- If no commands are documented, skip silently — but note in the summary that health checks were unavailable.
+- Include the results in the session summary (e.g., "Health: build passed, 47 tests passed, 2 lint warnings").
+
+**Step 3c: Interact with the output**
 - Where possible, actually test what was built — run the app, execute the code, hit the endpoints, check the UI.
 - Don't just read the code and assume it works. Use available tools (terminal, browser, MCP servers) to verify.
 - If you can't test (e.g., no dev server configured), explicitly note this as a gap.
 
-**Step 3c: Grade the session honestly**
+**Step 3d: Grade the session honestly**
 Categorize each deliverable into one of these statuses:
 - **Done & Verified**: tested, working, meets the acceptance criteria
 - **Done but Unverified**: code written but not tested or interacted with
@@ -54,7 +62,7 @@ Use these categories in the session summary (Step 10) instead of a flat "Accompl
 #### `NEXT_SESSION.md`
 Rewrite this file with fresh continuity notes for whoever picks up next:
 - **Ticket worked on** (if a ticket was set this session, include it prominently at the top — e.g., `Ticket: GAM-5`)
-- What was accomplished this session (use the graded statuses from Step 3c)
+- What was accomplished this session (use the graded statuses from Step 3d)
 - What's in progress or partially done
 - Any blockers, open questions, or decisions needed
 - Key files that were modified
@@ -149,6 +157,7 @@ If the session was long or involved multiple large changes, explicitly recommend
     * <item — why>
 
   Definition of Done met: <Y/N/Partial>
+  Health: <build passed, N tests passed | build failed | no commands documented>
   Docker: <rebuilt N services | rebuild failed | no changes | N/A>
   CLAUDE.md updates proposed: <Y/N>
   Side quests captured: <N>
@@ -178,6 +187,7 @@ If the session was long or involved multiple large changes, explicitly recommend
     * <outcome — what's missing>
 
   Status: <completed | partial - needs another session>
+  Health: <build passed, N tests passed | build failed | no commands documented>
   Docker: <rebuilt N services | rebuild failed | no changes | N/A>
   Main quest impact: <none | describe if any>
   CLAUDE.md updates proposed: <Y/N>
